@@ -35,7 +35,8 @@ CREATE TABLE 'EntryTags' (
 
 INSERT INTO entries 
     ('date', 'concept', 'entry', 'mood_id', 'instructor_id')
-    VALUES ('2021-02-01', 'html', 'html is okay', 2, 2);
+    VALUES ('2021-03-16', 'React', 'React is hard', 3, 1),
+            ('2021-04-16', 'Python', 'I miss React', 3, 3);
 
 INSERT INTO Moods
     ('label')
