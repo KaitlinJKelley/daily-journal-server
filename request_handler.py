@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from entries import get_all_entries
+from entries import get_all_entries, get_single_entry
 
 class HandleRequests(BaseHTTPRequestHandler):
     # Here's a class function
