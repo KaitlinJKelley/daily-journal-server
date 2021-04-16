@@ -24,7 +24,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         resource = path_params[1] #entries?q=html
         key = None
         
-
         value = None
 
         # Try to get the item at index 2
@@ -42,9 +41,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         except ValueError:
             # Request had trailing slash: /entries/ OR something was passed that can't be converted to an integer
             pass
+        return (resource, value)
                     
-        
-    
     def do_GET(self):
         self._set_headers(200)
         response = {}  # Default response
@@ -58,8 +56,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif type(value) == str:
                 response = get_entries_by_word(value)
 
-        else:
-            response = f"{get_all_entries()}"
+            else:
+                response = f"{get_all_entries()}"
 
         self.wfile.write(response.encode())
 
