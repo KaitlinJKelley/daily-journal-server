@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from entries import get_all_entries, get_single_entry
+from entries import get_all_entries, get_single_entry, get_entries_by_word
 
 class HandleRequests(BaseHTTPRequestHandler):
     # Here's a class function
@@ -19,39 +19,47 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
     
     def parse_url(self, path):
-        # Just like splitting a string in JavaScript. If the
-        # path is "/animals/1", the resulting list will
-        # have "" at index 0, "animals" at index 1, and "1"
-        # at index 2.
+       
         path_params = path.split("/")
-        resource = path_params[1]
-        id = None
+        resource = path_params[1] #entries?q=html
+        key = None
+        
+
+        value = None
 
         # Try to get the item at index 2
         try:
-            # Convert the string "1" to the integer 1
-            # This is the new parseInt()
-            id = int(path_params[2])
+          
+            value = int(path_params[2])
+            return (resource, value)  # This is a tuple
         except IndexError:
-            pass  # No route parameter exists: /animals
+            # pass  # No route parameter exists
+            if "?" in path:
+                if path_params[1] != "":
+                    key = resource.split("?q=")[0]
+                    value = resource.split("?q=")[1]
+                    return (key, value)
         except ValueError:
-            pass  # Request had trailing slash: /animals/
-
-        return (resource, id)  # This is a tuple
+            # Request had trailing slash: /entries/ OR something was passed that can't be converted to an integer
+            pass
+                    
+        
     
     def do_GET(self):
         self._set_headers(200)
         response = {}  # Default response
 
         # Parse the URL and capture the tuple that is returned
-        (resource, id) = self.parse_url(self.path)
+        (resource, value) = self.parse_url(self.path)
 
         if resource == "entries":
-            if id is not None:
-                response = f"{get_single_entry(id)}"
+            if type(value) == int:
+                response = f"{get_single_entry(value)}"
+            elif type(value) == str:
+                response = get_entries_by_word(value)
 
-            else:
-                response = f"{get_all_entries()}"
+        else:
+            response = f"{get_all_entries()}"
 
         self.wfile.write(response.encode())
 
