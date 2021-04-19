@@ -49,3 +49,5 @@ INSERT INTO instructors
     VALUES ('Hannah', 'Hall'),
             ('Scott', 'Silver'),
             ('Adam', 'Sheaffer');
+
+DROP TABLE Moods;

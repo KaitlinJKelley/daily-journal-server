@@ -7,4 +7,5 @@ class Entry ():
         self.entry = entry
         self.mood_id = mood_id
         self.instructor_id = instructor_id
+        self.mood = None
 
