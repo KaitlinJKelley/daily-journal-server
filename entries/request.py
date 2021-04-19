@@ -69,6 +69,29 @@ def get_single_entry(id):
 
     return json.dumps(entry.__dict__)
 
+def create_entry(new_entry):
+    with sqlite3.connect("./dailyJournal.db") as conn:
+
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(""" 
+        INSERT INTO entries
+            (date, concept, entry, mood_id)
+        VALUES
+            (?,?,?,?)
+        """, (
+            new_entry["date"],
+            new_entry["concept"],
+            new_entry["entry"],
+            new_entry["moodId"]
+        ))
+
+        id = db_cursor.lastrowid
+
+        new_entry["id"] = id
+
+        return json.dumps(new_entry)
+
 def delete_entry(id):
     with sqlite3.connect("dailyjournal.db") as conn:
 
