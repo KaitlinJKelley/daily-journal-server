@@ -16,10 +16,11 @@ def get_all_entries():
             e.concept,
             e.entry,
             e.mood_id,
-            e.instructor_id
+            e.instructor_id,
+            m.label
         FROM entries e
         JOIN moods m
-        WHERE e.mood_id = m.id
+            ON m.id = e.mood_id
         """)
 
         entries = []
