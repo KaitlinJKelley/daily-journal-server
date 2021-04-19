@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from entries import get_all_entries, get_single_entry, get_entries_by_word
+from entries import get_all_entries, get_single_entry, get_entries_by_word, create_entry
 from moods import get_all_moods
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -63,6 +63,21 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = get_all_moods()
 
         self.wfile.write(response.encode())
+    def do_POST(self):
+        self._set_headers(201)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+
+        post_body = json.loads(post_body)
+
+        (resource, value) = self.parse_url(self.path)
+
+        response = {}
+
+        if resource == "entries":
+            response = create_entry(post_body)
+        
+        return self.wfile.write(response.encode())
 
 def main():
     host = ''
