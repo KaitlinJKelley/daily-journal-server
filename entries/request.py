@@ -17,7 +17,9 @@ def get_all_entries():
             e.entry,
             e.mood_id,
             e.instructor_id,
-            m.label
+            m.label,
+            i.first_name,
+            i.last_name
         FROM entries e
         JOIN moods m
             ON m.id = e.mood_id
@@ -36,7 +38,7 @@ def get_all_entries():
             entry.mood = mood.__dict__
 
             instructor = Instructor(row["instructor_id"], row["first_name"], row["last_name"])
-            entry.instructor = instructor
+            entry.instructor = instructor.__dict__
 
             entries.append(entry.__dict__)
 
