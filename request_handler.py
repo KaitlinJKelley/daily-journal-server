@@ -1,3 +1,4 @@
+from entries.request import update_entry
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from entries import get_all_entries, get_single_entry, get_entries_by_word, create_entry
@@ -23,8 +24,8 @@ class HandleRequests(BaseHTTPRequestHandler):
        
         path_params = path.split("/")
         resource = path_params[1] #entries?q=html
+
         key = None
-        
         value = None
 
         # Try to get the item at index 2
@@ -63,6 +64,21 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = get_all_moods()
 
         self.wfile.write(response.encode())
+    
+    def do_PUT(self):
+        self._set_headers(204)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+
+        post_body = json.loads(post_body)
+
+        (resource, value) = self.parse_url(self.path)
+
+        # response = {}
+
+        if resource == "entries":
+            update_entry(value, post_body)
+
     def do_POST(self):
         self._set_headers(201)
         content_len = int(self.headers.get('content-length', 0))

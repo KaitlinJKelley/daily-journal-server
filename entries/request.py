@@ -104,6 +104,7 @@ def delete_entry(id):
         """, (id,))
 
 def get_entries_by_word(word):
+
     with sqlite3.connect("dailyjournal.db") as conn:
 
         conn.row_factory = sqlite3.Row
@@ -138,3 +139,28 @@ def get_entries_by_word(word):
             entries.append(entry.__dict__)
         
         return json.dumps(entries)
+
+def update_entry(id, updated_entry):
+    
+    with sqlite3.connect("./dailyJournal.db") as conn:
+
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(""" 
+        UPDATE entries
+        SET
+            id = ?,
+            date = ?,
+            concept = ?,
+            entry = ?,
+            mood_id = ?
+        WHERE id = ?
+        """, (updated_entry["id"],updated_entry["date"],updated_entry["concept"],updated_entry["entry"],updated_entry["moodId"], id,))
+
+        rows_affected = db_cursor.rowcount
+
+        if rows_affected == 0:
+            return False
+        else: 
+            return True
+
