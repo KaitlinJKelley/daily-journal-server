@@ -1,7 +1,7 @@
 import sqlite3
 import json
 from sqlite3 import dbapi2
-from models import Entry, Mood
+from models import Entry, Mood, Instructor
 
 def get_all_entries():
     with sqlite3.connect("dailyjournal.db") as conn:
@@ -34,7 +34,7 @@ def get_all_entries():
 
             mood = Mood(row["mood_id"], row["label"])
 
-            instructor = Instructor(row["instructor_id"], row["first_name"], row["last_name"])
+            instructor = Instructor(row["instructor_id"], row["first_name"], row["last-name"])
             entry.instructor = instructor.__dict__
 
             entries.append(entry.__dict__)

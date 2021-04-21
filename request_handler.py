@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from entries import get_all_entries, get_single_entry, get_entries_by_word, create_entry
 from moods import get_all_moods
+from instructors import get_all_instructors
 
 class HandleRequests(BaseHTTPRequestHandler):
     # Here's a class function
@@ -62,6 +63,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = f"{get_all_entries()}"
         if resource == "moods":
             response = get_all_moods()
+        if resource == "instructors":
+            response = get_all_instructors()
 
         self.wfile.write(response.encode())
     
