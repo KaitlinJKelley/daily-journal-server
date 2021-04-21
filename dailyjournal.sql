@@ -51,3 +51,7 @@ INSERT INTO instructors
             ('Adam', 'Sheaffer');
 
 DROP TABLE Moods;
+
+INSERT INTO Tags
+(subject)
+VALUES ("html"), ("react"), ("debugging"), ("ask-for-help");
