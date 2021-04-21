@@ -8,5 +8,4 @@ class Entry ():
         self.moodId = mood_id
         self.instructor_id = instructor_id
         self.mood = None
-        self.instructor = None
 
