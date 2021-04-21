@@ -51,3 +51,9 @@ INSERT INTO instructors
             ('Adam', 'Sheaffer');
 
 DROP TABLE Moods;
+
+SELECT 
+            i.id,
+            i.first_name,
+            i.last_name
+        FROM instructors i;
