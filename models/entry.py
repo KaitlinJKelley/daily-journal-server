@@ -5,7 +5,7 @@ class Entry ():
         self.date = date
         self.concept = concept
         self.entry = entry
-        self.mood_id = mood_id
+        self.moodId = mood_id
         self.instructor_id = instructor_id
         self.mood = None
 
