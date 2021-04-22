@@ -4,6 +4,7 @@ import json
 from entries import get_all_entries, get_single_entry, get_entries_by_word, create_entry
 from moods import get_all_moods
 from instructors import get_all_instructors
+from tags import get_all_tags, get_all_entry_tags
 
 class HandleRequests(BaseHTTPRequestHandler):
     # Here's a class function
@@ -22,49 +23,80 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
     
     def parse_url(self, path):
-       
         path_params = path.split("/")
-        resource = path_params[1] #entries?q=html
+        resource = path_params[1]
 
-        key = None
-        value = None
+        # Check if there is a query string parameter
+        if "?" in resource:
+            # GIVEN: /customers?email=jenna@solis.com
 
-        # Try to get the item at index 2
-        try:
-          
-            value = int(path_params[2])
-            return (resource, value)  # This is a tuple
-        except IndexError:
-            # pass  # No route parameter exists
-            if "?" in path:
-                if path_params[1] != "":
-                    key = resource.split("?q=")[0]
-                    value = resource.split("?q=")[1]
-                    return (key, value)
-        except ValueError:
-            # Request had trailing slash: /entries/ OR something was passed that can't be converted to an integer
-            pass
-        return (resource, value)
+            param = resource.split("?")[1]  # email=jenna@solis.com
+            resource = resource.split("?")[0]  # 'customers'
+            pair = param.split("=")  # [ 'email', 'jenna@solis.com' ]
+            key = pair[0]  # 'email'
+            value = pair[1]  # 'jenna@solis.com'
+
+            return ( resource, key, value )
+
+        # No query string parameter
+        else:
+            id = None
+
+            try:
+                id = int(path_params[2])
+            except IndexError:
+                pass  # No route parameter exists: /animals
+            except ValueError:
+                pass  # Request had trailing slash: /animals/
+
+            return (resource, id)
                     
     def do_GET(self):
         self._set_headers(200)
-        response = {}  # Default response
 
-        # Parse the URL and capture the tuple that is returned
-        (resource, value) = self.parse_url(self.path)
+        response = {}
 
-        if resource == "entries":
-            if type(value) == int:
-                response = f"{get_single_entry(value)}"
-            elif type(value) == str:
-                response = get_entries_by_word(value)
+        # Parse URL and store entire tuple in a variable
+        parsed = self.parse_url(self.path)
 
-            else:
-                response = f"{get_all_entries()}"
-        if resource == "moods":
-            response = get_all_moods()
-        if resource == "instructors":
-            response = get_all_instructors()
+        # Response from parse_url() is a tuple with 2
+        # items in it, which means the request was for
+        # `/animals` or `/animals/2`
+        if len(parsed) == 2:
+            ( resource, id ) = parsed
+
+            if resource == "entries":
+                if id is not None:
+                    response = get_single_entry(id)
+                else:
+                    response = get_all_entries()
+            elif resource == "moods":
+                response = get_all_moods()
+            elif resource == "instructors":
+                response = get_all_instructors()
+            elif resource == "tags":
+                response = get_all_tags()
+            elif resource == "entrytags":
+                response = get_all_entry_tags()
+
+        # Response from parse_url() is a tuple with 3
+        # items in it, which means the request was for
+        # `/resource?parameter=value`
+        elif len(parsed) == 3:
+            ( resource, key, value ) = parsed
+
+            # Is the resource `customers` and was there a
+            # query parameter that specified the customer
+            # email as a filtering value?
+            if key == "entries" and resource == "customers":
+                response = f"{get_customers_by_email(value)}"
+            if key == "location_id":
+                if resource == "animals":
+                    response = f"{get_animals_by_location(value)}"
+                elif resource == "employees":
+                    response = f"{get_employees_by_location(value)}"
+            if key == "status" and resource == "animals":
+                response = f"{get_animals_by_status(value)}"
 
         self.wfile.write(response.encode())
     
