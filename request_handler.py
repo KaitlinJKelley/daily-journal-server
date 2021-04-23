@@ -1,4 +1,4 @@
-from entries.request import update_entry
+from entries.request import delete_entry, update_entry
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from entries import get_all_entries, get_single_entry, get_entries_by_word, create_entry
@@ -129,6 +129,14 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_entry(post_body)
         
         return self.wfile.write(response.encode())
+
+    def do_DELETE(self):
+        self._set_headers(204)
+
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == "entries":
+            response = delete_entry(id)
 
 def main():
     host = ''

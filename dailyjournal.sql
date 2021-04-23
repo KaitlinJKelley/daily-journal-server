@@ -22,7 +22,7 @@ CREATE TABLE 'Instructors' (
 
 CREATE TABLE 'Tags' (
     'id'    INTEGER PRIMARY KEY AUTOINCREMENT,
-    'subject'   VARCHAR
+    'subject'   VARCHAR UNIQUE
 );
 
 CREATE TABLE 'Entry_Tags' (
@@ -83,4 +83,20 @@ SELECT DISTINCT
             ON m.id = e.mood_id
         LEFT JOIN instructors i
             ON i.id = e.instructor_id
+        ;
+
+INSERT INTO Tags
+    ('subject')
+VALUES  
+    ('Debugging'),
+    ('React'),
+    ('Ask-for-help'),
+    ('Not-bad');
+
+
+SELECT * FROM Tags;
+
+SELECT id, subject 
+        FROM Tags t
+        WHERE t.subject in ('React',)
         ;
