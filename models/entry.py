@@ -6,6 +6,7 @@ class Entry ():
         self.concept = concept
         self.entry = entry
         self.moodId = mood_id
-        self.instructor_id = instructor_id
+        self.instructor_id = None
         self.mood = None
+        self.tag = None
 
